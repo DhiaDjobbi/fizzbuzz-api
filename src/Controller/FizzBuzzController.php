@@ -6,8 +6,8 @@ namespace App\Controller;
 
 use App\Dto\FizzBuzzRequest;
 use App\Service\FizzBuzzGenerator;
+use App\Service\FizzBuzzRequestTracker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,15 +18,18 @@ class FizzBuzzController extends AbstractController
 
     #[Route(
         '/fizzbuzz',
+        name: 'fizzbuzz',
         methods: ['GET'],
-        format: 'json',
-        defaults: ['_strict_query_parameters' => self::QUERY_PARAMETERS],
+        defaults: [
+            '_strict_query_parameters' => self::QUERY_PARAMETERS,
+        ],
     )]
-    public function index(
+    public function __invoke(
         #[MapQueryString(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
         FizzBuzzRequest $request,
         FizzBuzzGenerator $generator,
-    ): JsonResponse {
+        FizzBuzzRequestTracker $tracker,
+    ): Response {
         $result = $generator->generate(
             $request->int1,
             $request->int2,
@@ -34,6 +37,8 @@ class FizzBuzzController extends AbstractController
             $request->str1,
             $request->str2,
         );
+
+        $tracker->track($request);
 
         return $this->json($result);
     }
