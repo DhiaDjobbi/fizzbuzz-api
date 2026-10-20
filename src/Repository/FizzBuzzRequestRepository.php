@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\FizzBuzzRequest;
@@ -16,28 +18,13 @@ class FizzBuzzRequestRepository extends ServiceEntityRepository
         parent::__construct($registry, FizzBuzzRequest::class);
     }
 
-//    /**
-//     * @return FizzBuzzRequest[] Returns an array of FizzBuzzRequest objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?FizzBuzzRequest
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findMostUsed(): ?FizzBuzzRequest
+    {
+        return $this->createQueryBuilder('r')
+            ->orderBy('r.hits', 'DESC')
+            ->addOrderBy('r.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
