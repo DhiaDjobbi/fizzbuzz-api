@@ -1,0 +1,20 @@
+
+nelmio_api_doc:
+    documentation:
+        info:
+            title: FizzBuzz API
+            description: REST API for generating FizzBuzz sequences and tracking request statistics.
+            version: 1.0.0
+        components:
+            responses:
+                BadRequest:
+                    description: Invalid or missing query parameters
+                NotFound:
+                    description: No FizzBuzz requests have been tracked yet
+                TooManyRequests:
+                    description: Rate limit exceeded
+    areas:
+        default:
+            path_patterns:
+                - '^/fizzbuzz$'
+                - '^/stats$'
